@@ -70,10 +70,10 @@ const router = Router();
 router.post(
     '/tasks',
     async (req, res) => {
-      await TaskController.create(req, res);
+        await TaskController.create(req, res);
     }
-  );
-  
+);
+
 /**
  * @swagger
  * /tasks:
@@ -92,9 +92,9 @@ router.post(
 router.get(
     '/tasks',
     async (req, res) => {
-      await TaskController.list(req, res);
+        await TaskController.list(req, res);
     }
-  );
+);
 
 /**
  * @swagger
@@ -114,9 +114,9 @@ router.get(
 router.get(
     '/tasks/schedule',
     async (req, res) => {
-      await TaskController.schedule(req, res);
+        await TaskController.schedule(req, res);
     }
-  );
+);
 
 
 
@@ -178,87 +178,87 @@ router.get(
  */
 router.get('/tasks/:id', async (req, res) => {
     await TaskController.getById(req, res);
-  });
-  
-  /**
-   * @swagger
-   * /tasks/{id}:
-   *   delete:
-   *     summary: Elimina una tarea por su ID.
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: integer
-   *         required: true
-   *         description: Identificador de la tarea a eliminar.
-   *     responses:
-   *       '200':
-   *         description: Tarea eliminada correctamente.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Task deleted
-   *                 task:
-   *                   $ref: '#/components/schemas/Task'
-   *       '404':
-   *         description: Tarea no encontrada.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 error:
-   *                   type: string
-   *                   example: Task not found
-   *       '500':
-   *         description: Error interno al eliminar la tarea.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 error:
-   *                   type: string
-   *                   example: Error deleting task
-   */
-  router.delete('/tasks/:id', async (req, res) => {
+});
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   delete:
+ *     summary: Elimina una tarea por su ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Identificador de la tarea a eliminar.
+ *     responses:
+ *       '200':
+ *         description: Tarea eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Task deleted
+ *                 task:
+ *                   $ref: '#/components/schemas/Task'
+ *       '404':
+ *         description: Tarea no encontrada.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Task not found
+ *       '500':
+ *         description: Error interno al eliminar la tarea.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error deleting task
+ */
+router.delete('/tasks/:id', async (req, res) => {
     await TaskController.deleteById(req, res);
-  });
-  
-  /**
-   * @swagger
-   * /tasks:
-   *   delete:
-   *     summary: Elimina todas las tareas (resetea la cola).
-   *     responses:
-   *       '200':
-   *         description: Se eliminaron todas las tareas.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Deleted 3 tasks
-   *       '500':
-   *         description: Error interno al eliminar todas las tareas.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 error:
-   *                   type: string
-   *                   example: Error deleting all tasks
-   */
-  router.delete('/tasks', async (req, res) => {
+});
+
+/**
+ * @swagger
+ * /tasks:
+ *   delete:
+ *     summary: Elimina todas las tareas (resetea la cola).
+ *     responses:
+ *       '200':
+ *         description: Se eliminaron todas las tareas.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Deleted 3 tasks
+ *       '500':
+ *         description: Error interno al eliminar todas las tareas.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error deleting all tasks
+ */
+router.delete('/tasks', async (req, res) => {
     await TaskController.deleteAll(req, res);
-  });
+});
 
 export default router;

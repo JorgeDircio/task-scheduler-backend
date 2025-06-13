@@ -4,6 +4,11 @@ services:
   db:
     image: postgres:15
     container_name: task-db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
     environment:
       POSTGRES_USER: ${PGUSER}
@@ -14,14 +19,31 @@ services:
     ports:
       - "${PGPORT:-5432}:5432"
 
-  backend:
+  rabbitmq:
+    image: rabbitmq:3-management
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    container_name: task-rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: task-backend
+    container_name: task-api
     depends_on:
       - db
+      - rabbitmq
     environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       PORT:       ${PORT}
       PGHOST:     db
       PGUSER:     ${PGUSER}
@@ -32,7 +54,27 @@ services:
       - "${PORT:-3000}:3000"
     volumes:
       - ./:/usr/src/app
-    command: npm run dev
+    command: npx ts-node-dev --respawn --transpile-only src/server.ts
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      PGHOST:     db
+      PGUSER:     ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      PGDATABASE: ${PGDATABASE}
+      PGPORT:     5432
+    volumes:
+      - ./:/usr/src/app
+    command: npx ts-node-dev --respawn --transpile-only src/worker.ts
 
 volumes:
   db_data:
