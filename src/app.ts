@@ -1,9 +1,16 @@
 import express from 'express';
+import cors from 'cors';
 import taskRoutes from './routes/task.routes';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 
 export const app = express();
+
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    methods: ['GET','POST','PUT','DELETE'],
+    allowedHeaders: ['Content-Type','Authorization'],
+  }));
 
 app.use(express.json());
 

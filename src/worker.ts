@@ -6,18 +6,18 @@ import { calculateSJFWithPriority } from './services/scheduler.service'
 
 async function startWorker() {
     const chan = await amqpHelper.init()
+    chan.prefetch(1)
 
     // Worker de creación de tareas
     await chan.assertQueue(QUEUE_MESSAGE_NAMES.TASK_CREATE, { durable: true })
-    chan.prefetch(1)
     console.log('Worker escuchando en', QUEUE_MESSAGE_NAMES.TASK_CREATE)
     chan.consume(
         QUEUE_MESSAGE_NAMES.TASK_CREATE,
         async (msg: ConsumeMessage | null) => {
             if (!msg) return
 
-            const { name, arrival_time, duration, priority } = JSON.parse(msg.content.toString())
-            await TaskModel.create({ name, arrival_time, duration, priority })
+            const { name, arrival_time, duration, priority, status } = JSON.parse(msg.content.toString())
+            await TaskModel.create({ name, arrival_time, duration, priority, status })
 
             chan.ack(msg)
             console.log(`Worker procesó e insertó tarea ${name}`)
@@ -27,7 +27,6 @@ async function startWorker() {
 
     // Worker de listado de tareas
     await chan.assertQueue(QUEUE_MESSAGE_NAMES.TASK_LIST, { durable: true })
-    chan.prefetch(1)
     console.log('Worker escuchando en', QUEUE_MESSAGE_NAMES.TASK_LIST)
     chan.consume(
         QUEUE_MESSAGE_NAMES.TASK_LIST,

@@ -4,7 +4,6 @@ import { v4 as uuid } from 'uuid';
 import { QUEUE_MESSAGE_NAMES } from '../common/constants';
 import { amqpHelper } from '../common/helpers/amqp.helper';
 
-
 export const TaskController = {
     async create(req: Request, res: Response) {
         try {

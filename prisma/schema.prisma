@@ -21,6 +21,7 @@ model Task {
   arrival_time Int
   duration     Int
   priority     String
+  status       String @default("pending")
 
   @@map("tasks")
 }
