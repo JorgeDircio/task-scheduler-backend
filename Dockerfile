@@ -2,8 +2,10 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-RUN npm ci
+COPY package.json ./
+
+ENV NODE_ENV=development
+RUN npm install
 
 COPY tsconfig.json ./
 COPY src/ src/

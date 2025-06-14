@@ -75,7 +75,7 @@ cd task-scheduler-backend
 docker-compose up -d --build
 
 # 3. Aplicar migraciones de desarrollo (requiere Postgres corriendo)
-npx prisma migrate dev
+docker-compose run --rm api npx prisma migrate dev
 
 Una vez terminado hasta este punto, ya tienes el backend corriendo, los demas pasos son opcionales.
 
