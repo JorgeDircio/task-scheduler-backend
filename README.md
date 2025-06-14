@@ -89,10 +89,10 @@ docker-compose down
 docker-compose down -v --remove-orphans
 
 # 7. Ejecutar pruebas unitarias
-npm run test
+docker-compose run --rm api npm run test
 
 # 8. Ejecutar pruebas con cobertura
-npm run test:coverage
+docker-compose run --rm api npm run test:coverage
 ```
 
 ---
